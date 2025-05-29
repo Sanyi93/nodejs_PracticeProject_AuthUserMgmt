@@ -45,7 +45,6 @@ router.post("/",(req,res)=>{
 
 // PUT request: Update the details of a friend with email id
 router.put("/:email", (req, res) => {
-
     const email = req.body.email;
     let friend = friends[email]; //retrieving friend object based on email (passed in the request)
 
