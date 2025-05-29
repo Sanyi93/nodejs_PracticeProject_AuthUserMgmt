@@ -35,11 +35,18 @@ const authenticatedUser = (username, password) => {
 
 const app = express();
 
+//create and use a session object with user-defined secret, as a middleware to intercept the requests
+//and ensure that the session is valid before processing the request.
 app.use(session({secret:"fingerpint"},resave=true,saveUninitialized=true));
 
 app.use(express.json());
 
 // Middleware to authenticate requests to "/friends" endpoint
+//ensure that all operations restricted to auhtenticated users are intercepted by the middleware.
+// The following code ensures that all the endpoints starting with /friends go through the middleware. 
+// It retrieves the authorization details from the session and verifies it. If the token is validated, 
+// the user is aunteticated and the control is passed on to the next endpoint handler. If the token is invalid, 
+// the user is not authenticated and an error message is returned.
 app.use("/friends", function auth(req, res, next) {
     // Check if user is logged in and has valid access token
     if (req.session.authorization) {
@@ -60,6 +67,7 @@ app.use("/friends", function auth(req, res, next) {
 });
 
 // Login endpoint
+//provide an endpoint for the registered users to login. This endpoint will do the following:
 app.post("/login", (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
